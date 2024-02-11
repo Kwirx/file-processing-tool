@@ -22,11 +22,11 @@ The File Processing Tool is a Python script that reads all the doc, html, and tx
 4. Activate the virtual environment:
    - On Windows:
      ```
-     env\Scripts\activate
+     .env\Scripts\activate
      ```
    - On macOS and Linux:
      ```
-     source env/bin/activate
+     source .env/bin/activate
      ```
 
 5. Install the required Python packages:
