@@ -36,6 +36,8 @@ def process_file(file_path, csv_writer):
         with open(file_path, 'r', encoding='utf-8') as file:
             text_content = file.read()
             content = re.sub(r'style\s?=\s?"[^"]+"', '', text_content) #Check and strip inline css
+    else:
+        return # Skip for all other extensions.
 
     csv_writer.writerow([file_name, content]) #Adding the info to the csv
 
