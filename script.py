@@ -11,13 +11,23 @@ def convert_to_html(file_path):
     # Convert DOC or DOCX to HTML using pandoc
     subprocess.run(["pandoc", file_path, "-o", html_file_path])    
     return html_file_path
-    
+
+# Function to remove inline css, class and id attributes
+def clean_html_text(html_content):
+    # Remove class attribute
+    html_content = re.sub(r'class=["\'][^"\']*["\']', '', html_content)
+    # Remove id attribute
+    html_content = re.sub(r'id=["\'][^"\']*["\']', '', html_content)
+    # Strip inline CSS
+    html_content = re.sub(r'style\s?=\s?"[^"]+"', '', html_content)
+    return html_content
+
 # Function to extract text content from HTML file
 def extract_html_text(file_path):
     with open(file_path, 'r') as file:
         soup = BeautifulSoup(file, 'html.parser')
         content = soup.body.decode_contents()
-        return re.sub(r'style\s?=\s?"[^"]+"', '', content) #Check and strip inline css
+        return clean_html_text(content)
 
 # Function to process each file in the folder
 def process_file(file_path, csv_writer):
@@ -29,13 +39,15 @@ def process_file(file_path, csv_writer):
       html_file_path = convert_to_html(file_path)
       with open(html_file_path, 'r', encoding='utf-8') as file:
           content = file.read()
+          content = clean_html_text(content)
+      file.close()
       os.remove(html_file_path)
     elif file_path.endswith('.html'):
         content = extract_html_text(file_path)
     elif file_path.endswith('.txt'):
         with open(file_path, 'r', encoding='utf-8') as file:
             text_content = file.read()
-            content = re.sub(r'style\s?=\s?"[^"]+"', '', text_content) #Check and strip inline css
+            content = clean_html_text(content)
     else:
         return # Skip for all other extensions.
 
