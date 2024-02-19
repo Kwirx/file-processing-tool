@@ -24,7 +24,7 @@ def clean_html_text(html_content):
 
 # Function to extract text content from HTML file
 def extract_html_text(file_path):
-    with open(file_path, 'r') as file:
+    with open(file_path, 'r', encoding='utf-8') as file:
         soup = BeautifulSoup(file, 'html.parser')
         content = soup.body.decode_contents()
         return clean_html_text(content)
