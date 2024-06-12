@@ -12,6 +12,14 @@ def convert_to_html(file_path):
     subprocess.run(["pandoc", file_path, "-o", html_file_path])    
     return html_file_path
 
+# Function to scan and fix special chars
+def fix_non_ascii(input_content):
+    replacements = {'’': "&rsquo;", '⁄': "&frasl;", '–': "&ndash;", ' ': "&nbsp;", '°': "&deg;", '™': "&trade;", '®': "&reg;",}
+    for old_char, new_char in replacements.items():
+        input_content = input_content.replace(old_char, new_char)
+    # remove all other ascii and return
+    return re.sub(r'[^\x00-\x7F]+', '', input_content)
+
 # Function to remove inline css, class and id attributes
 def clean_html_text(html_content):
     # Remove class attribute
@@ -20,6 +28,10 @@ def clean_html_text(html_content):
     html_content = re.sub(r'id=["\'][^"\']*["\']', '', html_content)
     # Strip inline CSS
     html_content = re.sub(r'style\s?=\s?"[^"]+"', '', html_content)
+    # Remove line breaks
+    html_content = re.sub(r'[\n\r]', ' ', html_content)
+    # Fix non-ASCII characters
+    html_content = fix_non_ascii(html_content)
     return html_content
 
 # Function to extract text content from HTML file

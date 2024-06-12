@@ -2,3 +2,7 @@
 source/*
 !source/.gitkeep 
 products.csv
+# Ignore folders starting with numbers
+/[0-9]*
+# Ignore files starting with "products_"
+/products_*
